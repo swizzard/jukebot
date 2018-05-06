@@ -1,0 +1,59 @@
+name:                jukebot
+version:             0.1.0.0
+github:              "swizzard/jukebot"
+license:             BSD3
+author:              "sam raker"
+maintainer:          "sam.raker@gmail.com"
+copyright:           "(c) 2018 sam raker"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on Github at <https://github.com/swizzard/jukebot#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- async
+- bytestring
+- conduit
+- Hastodon
+- lens
+- monad-logger
+- mtl
+- persistent
+- persistent-postgresql
+- persistent-template
+- time
+
+library:
+  source-dirs: src
+
+executables:
+  jukebot-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - jukebot
+
+tests:
+  jukebot-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - jukebot
