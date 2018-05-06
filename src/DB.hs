@@ -28,6 +28,8 @@ Song json
   name String
   artist String
   album AlbumId
+  url String
+  duration Int
   deriving Show
 User json
   mastodonId String

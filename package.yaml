@@ -31,7 +31,9 @@ dependencies:
 - persistent
 - persistent-postgresql
 - persistent-template
+- resourcet
 - time
+- vector
 
 library:
   source-dirs: src
