@@ -11,12 +11,16 @@
 module DB where
 
 import Control.Monad.IO.Class (liftIO)
-import Control.Monad.Logger (runStdoutLoggingT)
+import Control.Monad.IO.Unlift (MonadUnliftIO)
+import Control.Monad.Logger
+import Control.Monad.Reader
+import Control.Monad.Trans.Resource
+import Data.Pool
 import Data.Time.Clock
 import Database.Persist
 import Database.Persist.Postgresql
-import Database.Persist.Sql (rawExecute)
 import Database.Persist.TH
+import GHC.Int (Int64)
 
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
@@ -38,10 +42,19 @@ User json
   deriving Show
 |]
 
+doDb :: (MonadLogger m, MonadUnliftIO m) =>
+  ConnectionString ->
+  ReaderT SqlBackend (NoLoggingT (ResourceT IO)) a ->
+  m a
+doDb cs f = do
+  withPostgresqlPool cs 10 $ \pool -> liftIO $ do
+    runSqlPersistMPool f pool
 
-doMigrate :: ConnectionString -> IO ()
-doMigrate cs = do
-  runStdoutLoggingT $ withPostgresqlPool cs 10 $ \pool -> liftIO $ do
-    flip runSqlPersistMPool pool $ do
-      runMigration migrateAll
-      return ()
+
+-- runStdoutLoggingT $ doMigrate
+doMigrate :: (MonadLogger m, MonadUnliftIO m) => ConnectionString -> m ()
+doMigrate cs = doDb cs $ runMigration migrateAll >> return ()
+
+getSongIds :: (MonadLogger m, MonadUnliftIO m) => ConnectionString -> m [Key Song]
+getSongIds cs = doDb cs $ f <$> selectList [] []
+  where f = map entityKey

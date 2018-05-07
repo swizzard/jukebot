@@ -31,8 +31,12 @@ dependencies:
 - persistent
 - persistent-postgresql
 - persistent-template
+- random
+- resource-pool
 - resourcet
 - time
+- transformers
+- unliftio-core
 - vector
 
 library:

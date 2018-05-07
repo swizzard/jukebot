@@ -6,6 +6,7 @@ module Handlers
 
 import           Conduit
 import           Control.Lens
+import           Control.Monad.State
 import           Data.Maybe (maybe)
 import qualified Data.Time.Clock.System as T
 import qualified Data.Time.LocalTime as T
@@ -25,13 +26,14 @@ handler p = do
 
 handleThump :: App ()
 handleThump = App $ do
-  thumpCount += 1
   t' <- liftIO T.getSystemTime
   unApp $ handleNowPlaying t'
+  thumpCount += 1
   timeStamp .= t'
 
 handleNowPlaying :: T.SystemTime -> App ()
 handleNowPlaying t = App $ do
+  ss <- use songs
   undefined
 
   -- nowPlaying <- V.h <$> asks songs
