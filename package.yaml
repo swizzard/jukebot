@@ -24,6 +24,7 @@ dependencies:
 - async
 - bytestring
 - conduit
+- esqueleto
 - Hastodon
 - lens
 - monad-logger
