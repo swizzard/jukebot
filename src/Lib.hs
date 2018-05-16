@@ -4,17 +4,14 @@ module Lib
 
 
 import Conduit
-import Control.Monad.Reader
-import Control.Monad.Trans.Resource
-import Data.Conduit.Lift (runReaderC)
-import Web.Hastodon (streamUser, StreamingPayload)
+import Control.Monad.Reader (runReaderT)
+import Web.Hastodon (streamUser)
 
 import Handlers (handler)
-import Types
+import Types (App(..), Config(..), initialConfig)
 
 
 loop :: IO ()
 loop = do
   cfg <- initialConfig
-  let c = client cfg
-  flip runReaderT cfg $ unApp $ runConduitRes $ streamUser c .| mapM_C (lift . handler)
+  flip runReaderT cfg $ unApp $ runConduitRes $ streamUser (client cfg) .| mapM_C (lift . handler)
