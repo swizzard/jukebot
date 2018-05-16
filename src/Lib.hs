@@ -17,5 +17,4 @@ loop :: IO ()
 loop = do
   cfg <- initialConfig
   let c = client cfg
-  flip runReaderT cfg $ unApp $
-    runResourceT $ runConduit $ streamUser c .| mapM_C (lift . handler)
+  flip runReaderT cfg $ unApp $ runConduitRes $ streamUser c .| mapM_C (lift . handler)
