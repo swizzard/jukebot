@@ -26,14 +26,10 @@ import Types
 
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
-Album json
-  name String
-  code String
-  deriving Show
 Song json
   name String
   artist String
-  albumId AlbumId
+  code String
   url String
   duration Int
   deriving Show
